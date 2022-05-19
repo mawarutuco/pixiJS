@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <style>
+    #monsterBox {
+      position: absolute;
+      bottom: 0;
+      left: 5px;
+      margin: 0;
+    }
+  </style>
+
+  <body>
+    <script src="./js/pixi.min.js"></script>
+    <button id="bigger">bigger</button>
+    <button id="smaller">smaller</button>
+    <button id="jump">jump</button>
+    <div id="monsterBox"></div>
+    <script>
+      //畫布
+      const app = new PIXI.Application({
+        width: 400,
+        height: 400,
+        // transparent: true,
+        backgroundColor: 0x1099bb,
+      });
+      monsterBox.appendChild(app.view);
+
+      //容器
+      const container = new PIXI.Container();
+      app.stage.addChild(container);
+
+      //載入圖片
+      //   const lHand = new PIXI.Sprite.from("img/toDoMonPng/lHand_01.png");
+      //   lHand.x=150
+      //   lHand.y=190
+      //   const tail = new PIXI.Sprite.from("img/toDoMonPng/tail_01.png");
+      //   tail.x = 180;
+      //   tail.y = 240;
+
+      const tail = new PIXI.Sprite.from("toDoMonImg/todoMon_demo01.png");
+      const rFoot = new PIXI.Sprite.from("toDoMonImg/todoMon_demo_rFoot02.png");
+      const lFoot = new PIXI.Sprite.from("toDoMonImg/todoMon_demo_lFoot03.png");
+      const rHand = new PIXI.Sprite.from("toDoMonImg/todoMon_demo_rHand04.png");
+      const body = new PIXI.Sprite.from("toDoMonImg/todoMon_demo_body05.png");
+      const lHand = new PIXI.Sprite.from("toDoMonImg/todoMon_demo_lHand06.png");
+      const head = new PIXI.Sprite.from("toDoMonImg/todoMon_demo_face07.png");
+
+      container.addChild(tail, rFoot, lFoot, rHand, body, lHand, head);
+
+      //設定預設位置
+      container.x = 20;
+      container.y = 60;
+
+      head.position.set(170, 170);
+      head.anchor.set(0.5, 0.5);
+      tail.position.set(head.x, head.y + 60);
+      tail.anchor.set(0.5, 0.7);
+      lHand.position.set(head.x, head.y + 60);
+      lHand.anchor.set(0.5, 0.7);
+      rHand.position.set(head.x - 100, head.y + 60);
+      rHand.anchor.set(0.2, 0.7);
+      //腳還沒弄
+
+      //漂浮
+      let bobbingSpeed = 0.5;
+      container.velocityY = bobbingSpeed;
+      head.velocityY = bobbingSpeed;
+
+      function allMonsterBobbing() {
+        if (container.y <= 50) {
+          container.velocityY = bobbingSpeed;
+        }
+        if (container.y >= 60) {
+          container.velocityY = -bobbingSpeed;
+        }
+      }
+
+      function monsterItemBobbing(item) {
+        if (item.y <= 160) {
+          item.velocityY = bobbingSpeed;
+        }
+        if (item.y >= 170) {
+          item.velocityY = -bobbingSpeed;
+        }
+      }
+
+      wagSpeed = 0.01;
+      function wagMonsterItem(item, setSpeed = 0.01) {
+        if (item.rotation >= 0.1) {
+          wagSpeed = -setSpeed;
+        }
+        if (item.rotation <= -0.1) {
+          wagSpeed = setSpeed;
+        }
+      }
+
+      //動態
+      app.ticker.add(() => {
+        allMonsterBobbing();
+        container.y += container.velocityY;
+
+        // monsterItemBobbing(head);
+        // head.y += head.velocityY;
+
+        wagMonsterItem(tail);
+        tail.rotation += wagSpeed;
+
+        wagMonsterItem(lHand);
+        lHand.rotation += wagSpeed;
+
+        wagMonsterItem(rHand);
+        rHand.rotation += wagSpeed;
+
+        wagMonsterItem(head);
+        head.rotation += wagSpeed;
+      });
+
+      //互動------------------------
+      container.interactive = true;
+
+      container.on("mouseover", function (event) {});
+      container.on("click", function (event) {
+        console.log(event);
+      });
+
+      //按鈕----------------------------
+
+      let size = 1;
+      bigger.onclick = function () {
+        container.scale.set((size += 0.1));
+      };
+      smaller.onclick = function () {
+        container.scale.set((size -= 0.1));
+      };
+
+      jump.onclick = justJump;
+      function justJump() {
+        setTimeout(() => {
+          container.y -= 30;
+        }, 100);
+        setTimeout(() => {
+          container.y -= 50;
+        }, 200);
+        setTimeout(() => {
+          container.y += 50;
+        }, 300);
+        setTimeout(() => {
+          container.y += 30;
+        }, 400);
+        setTimeout(() => {
+          container.y -= 25;
+        }, 500);
+        setTimeout(() => {
+          container.y += 25;
+        }, 600);
+        setTimeout(() => {
+          container.y -= 10;
+        }, 700);
+        setTimeout(() => {
+          container.y += 10;
+        }, 800);
+        setTimeout(() => {
+          container.y -= 5;
+        }, 900);
+        setTimeout(() => {
+          container.y += 5;
+        }, 1000);
+      }
+
+      //   container.x = app.stage.width / 2;
+      //   container.y = app.stage.height / 2;
+    </script>
+  </body>
+</html>

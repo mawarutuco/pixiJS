@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="./js/pixi.min.js"></script>
+  </head>
+
+  <style>
+    body {
+      background-color: #ffbe6b;
+    }
+
+    canvas {
+      margin: 0 auto;
+      display: block;
+      margin-top: 20px;
+    }
+  </style>
+
+  <body>
+    <script>
+      function hitTest(r1, r2) {
+        //Define the variables we'll need to calculate
+        var hit, combinedHalfWidths, combinedHalfHeights, vx, vy;
+
+        //hit will determine whether there's a collision
+        hit = false;
+
+        //Find the center points of each sprite
+        r1.centerX = r1.x + r1.width / 2;
+        r1.centerY = r1.y + r1.height / 2;
+        r2.centerX = r2.x + r2.width / 2;
+        r2.centerY = r2.y + r2.height / 2;
+
+        //Find the half-widths and half-heights of each sprite
+        r1.halfWidth = r1.width / 2;
+        r1.halfHeight = r1.height / 2;
+        r2.halfWidth = r2.width / 2;
+        r2.halfHeight = r2.height / 2;
+
+        //Calculate the distance vector between the sprites
+        vx = r1.centerX - r2.centerX;
+        vy = r1.centerY - r2.centerY;
+
+        //Figure out the combined half-widths and half-heights
+        combinedHalfWidths = r1.halfWidth + r2.halfWidth;
+        combinedHalfHeights = r1.halfHeight + r2.halfHeight;
+
+        //Check for a collision on the x axis
+        if (Math.abs(vx) < combinedHalfWidths) {
+          //A collision might be occuring. Check for a collision on the y axis
+          if (Math.abs(vy) < combinedHalfHeights) {
+            //There's definitely a collision happening
+            hit = true;
+          } else {
+            //There's no collision on the y axis
+            hit = false;
+          }
+        } else {
+          //There's no collision on the x axis
+          hit = false;
+        }
+
+        //`hit` will be either `true` or `false`
+        return hit;
+      }
+
+      function randomIntFromInterval(min, max) {
+        return Math.floor(Math.random() * (max - min + 1) + min);
+      }
+
+      //島嶼漂浮
+      function islandBobbing() {
+        if (island.y <= 250) {
+          island.velocityY = 0.1;
+        }
+        if (island.y >= 255) {
+          island.velocityY = -0.1;
+        }
+      }
+
+      //雲
+      function cloudMovement() {
+        if (cloud.x >= 570) {
+          cloud.x = -70;
+        }
+
+        if (cloud.x == -70) {
+          if (cloud.delay != 0) {
+            cloud.velocityX = 0;
+            cloud.delay -= 1;
+          } else {
+            cloud.velocityX = Math.floor(Math.random() * 1.0 + 0.2);
+            cloud.delay = Math.floor(Math.random() * 200 + 1);
+          }
+        }
+      }
+
+      var app = new PIXI.Application(500, 500);
+      document.body.appendChild(app.view);
+
+      var background = PIXI.Sprite.from(
+        "https://res.cloudinary.com/kisokare/image/upload/v1509952367/rainbackground_cgg5kb.png"
+      );
+
+      var cloud = PIXI.Sprite.from(
+        "https://res.cloudinary.com/kisokare/image/upload/v1509952367/raincloud_nbnnm4.png"
+      );
+      var island = PIXI.Sprite.from(
+        "https://res.cloudinary.com/kisokare/image/upload/v1509883577/island_yowe4p.png"
+      );
+      var rainDrop = PIXI.Texture.from(
+        "https://res.cloudinary.com/kisokare/image/upload/v1509952367/raindrop_jggqrq.png"
+      );
+
+      var avatar = PIXI.Sprite.from(
+        "https://res.cloudinary.com/kisokare/image/upload/v1509952367/rainman_r4jh8b.png"
+      );
+
+      var blitz = PIXI.Sprite.from(
+        "https://res.cloudinary.com/kisokare/image/upload/v1509952367/blitz_lfzqdz.png"
+      );
+
+      var rain = [];
+      rain.velocityY = 0;
+      rain.velocityX = 0;
+      var maxRainDrops = 30;
+
+      avatar.y = island.y - 45;
+      avatar.x = app.renderer.width / 2 - 50;
+      avatar.anchor.set(0);
+
+      island.x = app.renderer.width / 2;
+      island.y = app.renderer.height / 2;
+      island.anchor.set(0.5, 0);
+      island.velocityY = 0.1;
+
+      cloud.x = -70;
+      cloud.y = 80;
+      cloud.anchor.set(0.5, 0.5);
+      cloud.velocityX = Math.floor(Math.random() * 1.0 + 0.2);
+      cloud.delay = Math.floor(Math.random() * 200 + 1);
+
+      blitz.x = cloud.x;
+      blitz.y = cloud.y + 70;
+      blitz.anchor.set(0.5, 0.5);
+      blitz.visible = false;
+      blitz.delay = delay = Math.floor(Math.random() * 400 + 1);
+      blitz.visibleLength = Math.floor(Math.random() * 10 + 1);
+
+      app.stage.addChild(background);
+      app.stage.addChild(avatar);
+      app.stage.addChild(island);
+
+      for (var i = 0; i < maxRainDrops; i++) {
+        var droplet = new PIXI.Sprite(rainDrop);
+        droplet.delay = Math.floor(Math.random() * 100 + 1);
+        droplet.y = cloud.y;
+        droplet.anchor.set(0.5);
+        droplet.x = randomIntFromInterval(cloud.x - 50, cloud.x + 50);
+        rain.push(droplet);
+        app.stage.addChild(droplet);
+      }
+
+      app.stage.addChild(cloud);
+      app.stage.addChild(blitz);
+
+      app.ticker.add(function (delta) {
+        island.y += island.velocityY;
+        avatar.y = island.y - 45;
+        cloud.x += cloud.velocityX;
+        blitz.x = cloud.x;
+        blitz.y = cloud.y + 70;
+
+        if (blitz.delay != 0) {
+          blitz.delay -= 1;
+        } else {
+          if (blitz.visibleLength != 0) {
+            blitz.visible = true;
+            blitz.visibleLength -= 1;
+          } else {
+            blitz.visible = false;
+            blitz.delay = delay = Math.floor(Math.random() * 400 + 1);
+            blitz.visibleLength = Math.floor(Math.random() * 10 + 1);
+          }
+        }
+
+        cloudMovement();
+        islandBobbing();
+
+        for (var i = 0; i < rain.length; i++) {
+          if (rain[i].delay != 0) {
+            rain[i].delay -= 1;
+          } else {
+            if (hitTest(rain[i], avatar)) {
+              rain.velocityY = 0;
+              rain[i].y = avatar.y;
+
+              //rain falls to left or right side
+
+              var start = avatar.x;
+              var end = avatar.x + avatar.width;
+
+              var middle = (start + end) / 2;
+
+              if (rain[i].x < middle) {
+                rain.velocityX = -2;
+              } else {
+                rain.velocityX = 2;
+              }
+
+              rain[i].x += rain.velocityX;
+            } else {
+              rain.velocityY = 4;
+            }
+            rain[i].y += rain.velocityY;
+
+            if (rain[i].y >= 500) {
+              rain[i].y = cloud.y;
+              rain[i].x = randomIntFromInterval(cloud.x - 50, cloud.x + 50);
+            }
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -17,6 +17,7 @@
   </style>
   <body>
     <button id="showCat">showCat</button>
+    <button id="showNiceCat">showNiceCat</button>
     <button id="showPeople">showPeople</button>
     <hr />
     <button id="bigger">bigger</button>
@@ -65,6 +66,15 @@
         right.x = -60;
         justJump();
       };
+
+      const niceCat = new PIXI.Sprite.from("./img/niceCat.png")
+      const catHand = new PIXI.Sprite.from("./img/catHand.png")
+      showNiceCat.onclick=function () {
+        container.removeChildren();
+        container.addChild(niceCat,catHand);
+        niceCat.anchor.set(0.5, 0.5);
+        catHand.anchor.set(0.5, 0.5);
+      }
 
       //--loader測試--------------------------
 
