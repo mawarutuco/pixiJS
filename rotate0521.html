@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script src="./js/pixi.js"></script>
+    <script>
+      const app = new PIXI.Application();
+      document.body.appendChild(app.view);
+
+      // create a texture from an image path
+      let texture;
+
+      app.loader.add("flowerTop", "img/scareCat.png");
+      app.loader.load((loader, resources) => {
+        texture = resources.flowerTop.texture;
+        init();
+      });
+
+      function init() {
+        // create rotated textures
+
+        const crop = new PIXI.Rectangle(
+          texture.frame.x,
+          texture.frame.y,
+          texture.frame.width,
+          texture.frame.height
+        );
+
+        let rotatedTexture = new PIXI.Texture(
+          texture.baseTexture,
+          crop,
+          crop,
+          crop,
+          12
+        );
+
+        const dude = new PIXI.Sprite(rotatedTexture);
+        app.stage.addChild(dude);
+      }
+    </script>
+  </body>
+</html>
