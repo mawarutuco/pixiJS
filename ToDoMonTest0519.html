@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>ToDoMon</title>
   </head>
 
   <style>
@@ -17,13 +17,21 @@
   </style>
 
   <body>
-    <script src="./js/pixi.min.js"></script>
-    <button id="bigger">bigger</button>
-    <button id="smaller">smaller</button>
+    <script src="./js/pixi.js"></script>
+    <!-- <script src="./js/pixi.min.js"></script> -->
     <button id="jump">jump</button>
+    <button id="sayHi">sayHi</button>
+    <br /><br />
+    small<input
+      id="adjustSize"
+      type="range"
+      max="1.9"
+      min="0.1"
+      step="0.1"
+    />big
     <div id="monsterBox"></div>
-    <script>
-      //畫布
+    <script type="module">
+      //設置畫布
       const app = new PIXI.Application({
         width: 400,
         height: 400,
@@ -32,150 +40,197 @@
       });
       monsterBox.appendChild(app.view);
 
-      //容器
+      //設置容器，丟進畫布
       const container = new PIXI.Container();
-      app.stage.addChild(container);
+
+      //URL
+      let headURL = "todoMon_demo_face07";
 
       //載入圖片
-      //   const lHand = new PIXI.Sprite.from("img/toDoMonPng/lHand_01.png");
-      //   lHand.x=150
-      //   lHand.y=190
-      //   const tail = new PIXI.Sprite.from("img/toDoMonPng/tail_01.png");
-      //   tail.x = 180;
-      //   tail.y = 240;
+      let loader = new PIXI.Loader();
+      loader
+        .add("tail", "toDoMonImg/todoMon_demo01.png")
+        .add("rFoot", "toDoMonImg/todoMon_demo_rFoot02.png")
+        .add("lFoot", "toDoMonImg/todoMon_demo_lFoot03.png")
+        .add("rHand", "toDoMonImg/todoMon_demo_rHand04.png")
+        .add("body", "toDoMonImg/todoMon_demo_body05.png")
+        .add("lHand", "toDoMonImg/todoMon_demo_lHand06.png")
+        .add("head", "toDoMonImg/todoMon_demo_face07.png")
+        .load(init);
 
-      const tail = new PIXI.Sprite.from("toDoMonImg/todoMon_demo01.png");
-      const rFoot = new PIXI.Sprite.from("toDoMonImg/todoMon_demo_rFoot02.png");
-      const lFoot = new PIXI.Sprite.from("toDoMonImg/todoMon_demo_lFoot03.png");
-      const rHand = new PIXI.Sprite.from("toDoMonImg/todoMon_demo_rHand04.png");
-      const body = new PIXI.Sprite.from("toDoMonImg/todoMon_demo_body05.png");
-      const lHand = new PIXI.Sprite.from("toDoMonImg/todoMon_demo_lHand06.png");
-      const head = new PIXI.Sprite.from("toDoMonImg/todoMon_demo_face07.png");
+      function init(resources) {
+        const tail = new PIXI.Sprite.from("tail");
+        const rFoot = new PIXI.Sprite.from("rFoot");
+        const lFoot = new PIXI.Sprite.from("lFoot");
+        const rHand = new PIXI.Sprite.from("rHand");
+        const body = new PIXI.Sprite.from("body");
+        const lHand = new PIXI.Sprite.from("lHand");
+        const head = new PIXI.Sprite.from("head");
 
-      container.addChild(tail, rFoot, lFoot, rHand, body, lHand, head);
+        //圖片丟進容器內 (順序越前面，放越底層)
+        container.addChild(tail, rFoot, lFoot, rHand, body, lHand, head);
+        app.stage.addChild(container);
 
-      //設定預設位置
-      container.x = 20;
-      container.y = 60;
+        //設定圖片預設位置start----------
+        container.position.set(30, 60);
+        container.rotate = 12;
 
-      head.position.set(170, 170);
-      head.anchor.set(0.5, 0.5);
-      tail.position.set(head.x, head.y + 60);
-      tail.anchor.set(0.5, 0.7);
-      lHand.position.set(head.x, head.y + 60);
-      lHand.anchor.set(0.5, 0.7);
-      rHand.position.set(head.x - 100, head.y + 60);
-      rHand.anchor.set(0.2, 0.7);
-      //腳還沒弄
+        head.position.set(170, 170);
+        head.anchor.set(0.5, 0.5);
 
-      //漂浮
-      let bobbingSpeed = 0.5;
-      container.velocityY = bobbingSpeed;
-      head.velocityY = bobbingSpeed;
+        tail.position.set(head.x, head.y + 60);
+        tail.anchor.set(0.5, 0.7);
 
-      function allMonsterBobbing() {
-        if (container.y <= 50) {
-          container.velocityY = bobbingSpeed;
+        lHand.position.set(head.x, head.y + 60);
+        lHand.anchor.set(0.5, 0.7);
+
+        rHand.position.set(head.x - 100, head.y + 60);
+        rHand.anchor.set(0.2, 0.7);
+
+        lFoot.position.set(head.x + 10, head.y + 60);
+        lFoot.anchor.set(0.5, 0.7);
+
+        rFoot.position.set(head.x - 100, head.y + 60);
+        rFoot.anchor.set(0.2, 0.7);
+        //設定圖片預設位置end---------------
+
+        //漂浮預設值
+        let setBobbingSpeed = 0.5;
+        let bobbingSpeed = setBobbingSpeed;
+
+        //全身漂浮
+        function allMonsterBobbing(item) {
+          if (item.y <= 50) {
+            bobbingSpeed = setBobbingSpeed;
+          }
+          if (item.y >= 60) {
+            bobbingSpeed = -setBobbingSpeed;
+          }
+          item.y += bobbingSpeed;
         }
-        if (container.y >= 60) {
-          container.velocityY = -bobbingSpeed;
+
+        //局部漂浮
+        function monsterItemBobbing(item) {
+          if (item.y <= 160) {
+            bobbingSpeed = setBobbingSpeed;
+          }
+          if (item.y >= 170) {
+            bobbingSpeed = -setBobbingSpeed;
+          }
+          container.y += bobbingSpeed;
+        }
+
+        //搖擺預設值
+        let setWagSpeed = 0.01;
+        let wagSpeed = setWagSpeed;
+
+        //搖擺動作
+        function wagMonsterItem(item) {
+          if (item.rotation >= 0.1) {
+            wagSpeed = -setWagSpeed;
+          }
+          if (item.rotation <= -0.1) {
+            wagSpeed = setWagSpeed;
+          }
+          item.rotation += wagSpeed;
+        }
+
+        let wagTailSpeed = 0.02;
+        function wagMoreTail(item) {
+          if (item.rotation >= 0.1) {
+            wagTailSpeed = -0.02;
+          }
+          if (item.rotation <= -0.7) {
+            wagTailSpeed = 0.02;
+          }
+
+          item.rotation += wagTailSpeed;
+
+          setTimeout(() => {
+            clearInterval(waggingTail);
+          }, 1000);
+        }
+
+        let mainTimer = "";
+        function main() {
+          mainTimer = setInterval(() => {
+            allMonsterBobbing(container);
+            wagMonsterItem(head);
+            wagMonsterItem(lHand);
+            wagMonsterItem(rHand);
+            wagMonsterItem(lFoot);
+            wagMonsterItem(rFoot);
+            wagMonsterItem(tail);
+          }, 15);
+        }
+        main();
+
+        //幀率(每秒螢幕刷新最大次數)更新函式
+        app.ticker.add(() => {});
+
+        //互動動作------------------------
+        //  設定可互動
+        container.interactive = true;
+
+        //滑鼠變手型
+        container.buttonMode = true;
+
+        let waggingTail = "";
+        container.on("pointerdown", (event) => {
+          // clearInterval(mainTimer);
+          clearInterval(waggingTail);
+          waggingTail = setInterval(() => wagMoreTail(tail));
+          // setTimeout(() => {
+          //   main();
+          // },1000);
+        });
+
+        //互動按鈕----------------------------
+
+        sayHi.onclick = function () {
+          rHand.rotation = 0.7;
+        };
+
+        adjustSize.oninput = function () {
+          container.scale.set(adjustSize.value);
+        };
+
+        jump.onclick = justJump;
+        function justJump() {
+          rHand.rotation = 0.7;
+          lHand.rotation = -0.9;
+          setTimeout(() => {
+            container.y -= 20;
+          }, 100);
+          setTimeout(() => {
+            container.y -= 25;
+          }, 200);
+          setTimeout(() => {
+            container.y += 25;
+          }, 300);
+          setTimeout(() => {
+            container.y += 20;
+          }, 400);
+          setTimeout(() => {
+            container.y -= 15;
+          }, 500);
+          setTimeout(() => {
+            container.y += 15;
+          }, 600);
+          setTimeout(() => {
+            container.y -= 10;
+          }, 700);
+          setTimeout(() => {
+            container.y += 10;
+          }, 800);
+          setTimeout(() => {
+            container.y -= 5;
+          }, 900);
+          setTimeout(() => {
+            container.y += 5;
+          }, 1000);
         }
       }
-
-      function monsterItemBobbing(item) {
-        if (item.y <= 160) {
-          item.velocityY = bobbingSpeed;
-        }
-        if (item.y >= 170) {
-          item.velocityY = -bobbingSpeed;
-        }
-      }
-
-      wagSpeed = 0.01;
-      function wagMonsterItem(item, setSpeed = 0.01) {
-        if (item.rotation >= 0.1) {
-          wagSpeed = -setSpeed;
-        }
-        if (item.rotation <= -0.1) {
-          wagSpeed = setSpeed;
-        }
-      }
-
-      //動態
-      app.ticker.add(() => {
-        allMonsterBobbing();
-        container.y += container.velocityY;
-
-        // monsterItemBobbing(head);
-        // head.y += head.velocityY;
-
-        wagMonsterItem(tail);
-        tail.rotation += wagSpeed;
-
-        wagMonsterItem(lHand);
-        lHand.rotation += wagSpeed;
-
-        wagMonsterItem(rHand);
-        rHand.rotation += wagSpeed;
-
-        wagMonsterItem(head);
-        head.rotation += wagSpeed;
-      });
-
-      //互動------------------------
-      container.interactive = true;
-
-      container.on("mouseover", function (event) {});
-      container.on("click", function (event) {
-        console.log(event);
-      });
-
-      //按鈕----------------------------
-
-      let size = 1;
-      bigger.onclick = function () {
-        container.scale.set((size += 0.1));
-      };
-      smaller.onclick = function () {
-        container.scale.set((size -= 0.1));
-      };
-
-      jump.onclick = justJump;
-      function justJump() {
-        setTimeout(() => {
-          container.y -= 30;
-        }, 100);
-        setTimeout(() => {
-          container.y -= 50;
-        }, 200);
-        setTimeout(() => {
-          container.y += 50;
-        }, 300);
-        setTimeout(() => {
-          container.y += 30;
-        }, 400);
-        setTimeout(() => {
-          container.y -= 25;
-        }, 500);
-        setTimeout(() => {
-          container.y += 25;
-        }, 600);
-        setTimeout(() => {
-          container.y -= 10;
-        }, 700);
-        setTimeout(() => {
-          container.y += 10;
-        }, 800);
-        setTimeout(() => {
-          container.y -= 5;
-        }, 900);
-        setTimeout(() => {
-          container.y += 5;
-        }, 1000);
-      }
-
-      //   container.x = app.stage.width / 2;
-      //   container.y = app.stage.height / 2;
     </script>
   </body>
 </html>
