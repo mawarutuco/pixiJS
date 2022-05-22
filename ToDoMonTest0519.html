@@ -14,6 +14,9 @@
       left: 5px;
       margin: 0;
     }
+    canvas {
+      transform: scale(-1, 1);
+    }
   </style>
 
   <body>
@@ -38,17 +41,17 @@
         // transparent: true,
         backgroundColor: 0x1099bb,
       });
-      monsterBox.appendChild(app.view);
 
-      //設置容器，丟進畫布
+      //設置容器
       const container = new PIXI.Container();
-
-      //URL
-      let headURL = "todoMon_demo_face07";
 
       //載入圖片
       let loader = new PIXI.Loader();
       loader
+        .add(
+          "backGroundImg",
+          "https://res.cloudinary.com/luvikung/image/upload/v1607422343/vonder/grass1_bvr0if.png"
+        )
         .add("tail", "toDoMonImg/todoMon_demo01.png")
         .add("rFoot", "toDoMonImg/todoMon_demo_rFoot02.png")
         .add("lFoot", "toDoMonImg/todoMon_demo_lFoot03.png")
@@ -58,7 +61,9 @@
         .add("head", "toDoMonImg/todoMon_demo_face07.png")
         .load(init);
 
-      function init(resources) {
+      //載入好後執行
+      function init() {
+        const backGroundImg = new PIXI.Sprite.from("backGroundImg");
         const tail = new PIXI.Sprite.from("tail");
         const rFoot = new PIXI.Sprite.from("rFoot");
         const lFoot = new PIXI.Sprite.from("lFoot");
@@ -67,13 +72,17 @@
         const lHand = new PIXI.Sprite.from("lHand");
         const head = new PIXI.Sprite.from("head");
 
+        //畫布丟進網頁
+        monsterBox.appendChild(app.view);
+
         //圖片丟進容器內 (順序越前面，放越底層)
         container.addChild(tail, rFoot, lFoot, rHand, body, lHand, head);
-        app.stage.addChild(container);
+        app.stage.addChild(backGroundImg, container);
 
         //設定圖片預設位置start----------
+        backGroundImg.position.set(-500, 100);
+
         container.position.set(30, 60);
-        container.rotate = 12;
 
         head.position.set(170, 170);
         head.anchor.set(0.5, 0.5);
@@ -135,6 +144,7 @@
           item.rotation += wagSpeed;
         }
 
+        //比較強烈的搖尾巴
         let wagTailSpeed = 0.02;
         function wagMoreTail(item) {
           if (item.rotation >= 0.1) {
@@ -151,22 +161,26 @@
           }, 1000);
         }
 
-        let mainTimer = "";
-        function main() {
-          mainTimer = setInterval(() => {
+        //放到ticker比較難控制暫停，放這邊可以用clearInterval控制
+        let controlTimer = "";
+        function controlMove() {
+          controlTimer = setInterval(() => {
             allMonsterBobbing(container);
-            wagMonsterItem(head);
-            wagMonsterItem(lHand);
-            wagMonsterItem(rHand);
-            wagMonsterItem(lFoot);
-            wagMonsterItem(rFoot);
-            wagMonsterItem(tail);
           }, 15);
+          //15ms是測起來比較正常的速度
         }
-        main();
+        controlMove();
 
         //幀率(每秒螢幕刷新最大次數)更新函式
-        app.ticker.add(() => {});
+        app.ticker.add(() => {
+          backGroundImg.x += 0.1;
+          wagMonsterItem(head);
+          wagMonsterItem(lHand);
+          wagMonsterItem(rHand);
+          wagMonsterItem(lFoot);
+          wagMonsterItem(rFoot);
+          wagMonsterItem(tail);
+        });
 
         //互動動作------------------------
         //  設定可互動
@@ -177,12 +191,8 @@
 
         let waggingTail = "";
         container.on("pointerdown", (event) => {
-          // clearInterval(mainTimer);
           clearInterval(waggingTail);
           waggingTail = setInterval(() => wagMoreTail(tail));
-          // setTimeout(() => {
-          //   main();
-          // },1000);
         });
 
         //互動按鈕----------------------------
@@ -196,41 +206,61 @@
         };
 
         jump.onclick = justJump;
-        function justJump() {
-          rHand.rotation = 0.7;
-          lHand.rotation = -0.9;
-          setTimeout(() => {
-            container.y -= 20;
-          }, 100);
-          setTimeout(() => {
-            container.y -= 25;
-          }, 200);
-          setTimeout(() => {
-            container.y += 25;
-          }, 300);
-          setTimeout(() => {
-            container.y += 20;
-          }, 400);
-          setTimeout(() => {
-            container.y -= 15;
-          }, 500);
-          setTimeout(() => {
-            container.y += 15;
-          }, 600);
-          setTimeout(() => {
-            container.y -= 10;
-          }, 700);
-          setTimeout(() => {
-            container.y += 10;
-          }, 800);
-          setTimeout(() => {
-            container.y -= 5;
-          }, 900);
-          setTimeout(() => {
-            container.y += 5;
-          }, 1000);
-        }
+        function justJump() {}
       }
+
+      //暫放..
+
+      //感覺把TDM放div，玩dimoGame時控div會比較好控制
+      //jump ver1 卡卡的
+      // rHand.rotation = 0.7;
+      //     lHand.rotation = -0.9;
+      //     setTimeout(() => {
+      //       container.y -= 20;
+      //     }, 100);
+      //     setTimeout(() => {
+      //       container.y -= 25;
+      //     }, 200);
+      //     setTimeout(() => {
+      //       container.y += 25;
+      //     }, 300);
+      //     setTimeout(() => {
+      //       container.y += 20;
+      //     }, 400);
+      //     setTimeout(() => {
+      //       container.y -= 15;
+      //     }, 500);
+      //     setTimeout(() => {
+      //       container.y += 15;
+      //     }, 600);
+      //     setTimeout(() => {
+      //       container.y -= 10;
+      //     }, 700);
+      //     setTimeout(() => {
+      //       container.y += 10;
+      //     }, 800);
+      // setTimeout(() => {
+      //   container.y -= 5;
+      // }, 900);
+      // setTimeout(() => {
+      //   container.y += 5;
+      // }, 1000);
+
+      //jump ver2 連按會失控
+      //clearInterval(controlTimer);
+
+      // let jumpTimer = setInterval(() => (container.y -= 1));
+      // setTimeout(() => {
+
+      //   clearInterval(jumpTimer);
+      //   let downTimer = setInterval(() => (container.y += 1));
+
+      //   setTimeout(() => {
+      //     clearInterval(downTimer);
+      //   }, 500);
+
+      //   main()
+      // }, 500);
     </script>
   </body>
 </html>
