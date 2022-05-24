@@ -21,7 +21,8 @@
 
   <body>
     <script src="./js/pixi.js"></script>
-    <!-- <script src="./js/pixi.min.js"></script> -->
+    <!-- <a href="#" download="downLoad.png" onclick="this.href=document.querySelector('canvas').toDataURL()">下載</a> -->
+
     <button id="jump">jump</button>
     <button id="sayHi">sayHi</button>
     <br /><br />
@@ -82,7 +83,10 @@
         //設定圖片預設位置start----------
         backGroundImg.position.set(-500, 100);
 
-        container.position.set(30, 60);
+        // container.position.set(30, 60);
+        container.pivot.x = container.width / 2;
+        container.pivot.y = container.height / 2;
+        container.position.set(app.view.width / 2, app.view.height / 2);
 
         head.position.set(170, 170);
         head.anchor.set(0.5, 0.5);
@@ -109,10 +113,10 @@
 
         //全身漂浮
         function allMonsterBobbing(item) {
-          if (item.y <= 50) {
+          if (item.y <= 200) {
             bobbingSpeed = setBobbingSpeed;
           }
-          if (item.y >= 60) {
+          if (item.y >= 210) {
             bobbingSpeed = -setBobbingSpeed;
           }
           item.y += bobbingSpeed;
@@ -120,10 +124,10 @@
 
         //局部漂浮
         function monsterItemBobbing(item) {
-          if (item.y <= 160) {
+          if (item.y <= 310) {
             bobbingSpeed = setBobbingSpeed;
           }
-          if (item.y >= 170) {
+          if (item.y >= 320) {
             bobbingSpeed = -setBobbingSpeed;
           }
           container.y += bobbingSpeed;
