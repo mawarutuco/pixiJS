@@ -34,237 +34,240 @@
       step="0.1"
     />big
     <div id="monsterBox"></div>
-    <script type="module">
-      //設置畫布
-      const app = new PIXI.Application({
-        width: 400,
-        height: 400,
-        // transparent: true,
-        backgroundColor: 0x1099bb,
-      });
+    <script>
 
-      //設置容器
-      const container = new PIXI.Container();
+            //載入圖片
+            let loader = new PIXI.Loader();
+            loader
+              .add(
+                "backGroundImg",
+                "https://res.cloudinary.com/luvikung/image/upload/v1607422343/vonder/grass1_bvr0if.png"
+              )
+              .add("tail", "toDoMonImg/todoMon_demo01.png")
+              .add("rFoot", "toDoMonImg/todoMon_demo_rFoot02.png")
+              .add("lFoot", "toDoMonImg/todoMon_demo_lFoot03.png")
+              .add("rHand", "toDoMonImg/todoMon_demo_rHand04.png")
+              .add("body", "toDoMonImg/todoMon_demo_body05.png")
+              .add("lHand", "toDoMonImg/todoMon_demo_lHand06.png")
+              .add("head", "toDoMonImg/todoMon_demo_face07.png")
+              .load(init);
 
-      //載入圖片
-      let loader = new PIXI.Loader();
-      loader
-        .add(
-          "backGroundImg",
-          "https://res.cloudinary.com/luvikung/image/upload/v1607422343/vonder/grass1_bvr0if.png"
-        )
-        .add("tail", "toDoMonImg/todoMon_demo01.png")
-        .add("rFoot", "toDoMonImg/todoMon_demo_rFoot02.png")
-        .add("lFoot", "toDoMonImg/todoMon_demo_lFoot03.png")
-        .add("rHand", "toDoMonImg/todoMon_demo_rHand04.png")
-        .add("body", "toDoMonImg/todoMon_demo_body05.png")
-        .add("lHand", "toDoMonImg/todoMon_demo_lHand06.png")
-        .add("head", "toDoMonImg/todoMon_demo_face07.png")
-        .load(init);
+            //載入好後執行
+            function init() {
+              const backGroundImg = new PIXI.Sprite.from("backGroundImg");
+              const tail = new PIXI.Sprite.from("tail");
+              const rFoot = new PIXI.Sprite.from("rFoot");
+              const lFoot = new PIXI.Sprite.from("lFoot");
+              const rHand = new PIXI.Sprite.from("rHand");
+              const body = new PIXI.Sprite.from("body");
+              const lHand = new PIXI.Sprite.from("lHand");
+              const head = new PIXI.Sprite.from("head");
 
-      //載入好後執行
-      function init() {
-        const backGroundImg = new PIXI.Sprite.from("backGroundImg");
-        const tail = new PIXI.Sprite.from("tail");
-        const rFoot = new PIXI.Sprite.from("rFoot");
-        const lFoot = new PIXI.Sprite.from("lFoot");
-        const rHand = new PIXI.Sprite.from("rHand");
-        const body = new PIXI.Sprite.from("body");
-        const lHand = new PIXI.Sprite.from("lHand");
-        const head = new PIXI.Sprite.from("head");
+           //設置畫布
+             const app = new PIXI.Application({
+              width: 400,
+              height: 400,
+              // transparent: true,
+              backgroundColor: 0x1099bb,
+            });
 
-        //畫布丟進網頁
-        monsterBox.appendChild(app.view);
+              //設置容器
+            const container = new PIXI.Container();
 
-        //圖片丟進容器內 (順序越前面，放越底層)
-        container.addChild(tail, rFoot, lFoot, rHand, body, lHand, head);
-        app.stage.addChild(backGroundImg, container);
+              //畫布丟進網頁
+              monsterBox.appendChild(app.view);
 
-        //設定圖片預設位置start----------
-        backGroundImg.position.set(-500, 100);
+              //圖片丟進容器內 (順序越前面，放越底層)
+              container.addChild(tail, rFoot, lFoot, rHand, body, lHand, head);
+              app.stage.addChild(backGroundImg, container);
 
-        // container.position.set(30, 60);
-        container.pivot.x = container.width / 2;
-        container.pivot.y = container.height / 2;
-        container.position.set(app.view.width / 2, app.view.height / 2);
+              //設定圖片預設位置start----------
+              backGroundImg.position.set(-500, 100);
 
-        head.position.set(170, 170);
-        head.anchor.set(0.5, 0.5);
+              // container.position.set(30, 60);
+              container.pivot.x = container.width / 2;
+              container.pivot.y = container.height / 2;
+              container.position.set(app.view.width / 2, app.view.height / 2);
 
-        tail.position.set(head.x, head.y + 60);
-        tail.anchor.set(0.5, 0.7);
+              head.position.set(170, 170);
+              head.anchor.set(0.5, 0.5);
 
-        lHand.position.set(head.x, head.y + 60);
-        lHand.anchor.set(0.5, 0.7);
+              tail.position.set(head.x, head.y + 60);
+              tail.anchor.set(0.5, 0.7);
 
-        rHand.position.set(head.x - 100, head.y + 60);
-        rHand.anchor.set(0.2, 0.7);
+              lHand.position.set(head.x, head.y + 60);
+              lHand.anchor.set(0.5, 0.7);
 
-        lFoot.position.set(head.x + 10, head.y + 60);
-        lFoot.anchor.set(0.5, 0.7);
+              rHand.position.set(head.x - 100, head.y + 60);
+              rHand.anchor.set(0.2, 0.7);
 
-        rFoot.position.set(head.x - 100, head.y + 60);
-        rFoot.anchor.set(0.2, 0.7);
-        //設定圖片預設位置end---------------
+              lFoot.position.set(head.x + 10, head.y + 60);
+              lFoot.anchor.set(0.5, 0.7);
 
-        //漂浮預設值
-        let setBobbingSpeed = 0.5;
-        let bobbingSpeed = setBobbingSpeed;
+              rFoot.position.set(head.x - 100, head.y + 60);
+              rFoot.anchor.set(0.2, 0.7);
+              //設定圖片預設位置end---------------
 
-        //全身漂浮
-        function allMonsterBobbing(item) {
-          if (item.y <= 200) {
-            bobbingSpeed = setBobbingSpeed;
-          }
-          if (item.y >= 210) {
-            bobbingSpeed = -setBobbingSpeed;
-          }
-          item.y += bobbingSpeed;
-        }
+              //漂浮預設值
+              let bobbingDistance = 10;
+              let bobbingHeightTop = app.view.height / 2;
+              let bobbingHeightBottom = bobbingHeightTop + bobbingDistance;
+              let setBobbingSpeed = 0.5;
+              let bobbingSpeed = setBobbingSpeed;
 
-        //局部漂浮
-        function monsterItemBobbing(item) {
-          if (item.y <= 310) {
-            bobbingSpeed = setBobbingSpeed;
-          }
-          if (item.y >= 320) {
-            bobbingSpeed = -setBobbingSpeed;
-          }
-          container.y += bobbingSpeed;
-        }
+              //全身漂浮
+              function allMonsterBobbing(item) {
+                if (item.y <= bobbingHeightTop) {
+                  bobbingSpeed = setBobbingSpeed;
+                }
+                if (item.y >= bobbingHeightBottom) {
+                  bobbingSpeed = -setBobbingSpeed;
+                }
+                item.y += bobbingSpeed;
+              }
 
-        //搖擺預設值
-        let setWagSpeed = 0.01;
-        let wagSpeed = setWagSpeed;
+              //局部漂浮
+              function monsterItemBobbing(item) {
+                if (item.y <= 310) {
+                  bobbingSpeed = setBobbingSpeed;
+                }
+                if (item.y >= 320) {
+                  bobbingSpeed = -setBobbingSpeed;
+                }
+                container.y += bobbingSpeed;
+              }
 
-        //搖擺動作
-        function wagMonsterItem(item) {
-          if (item.rotation >= 0.1) {
-            wagSpeed = -setWagSpeed;
-          }
-          if (item.rotation <= -0.1) {
-            wagSpeed = setWagSpeed;
-          }
-          item.rotation += wagSpeed;
-        }
+              //搖擺預設值
+              let setWagSpeed = 0.01;
+              let wagSpeed = setWagSpeed;
 
-        //比較強烈的搖尾巴
-        let wagTailSpeed = 0.02;
-        function wagMoreTail(item) {
-          if (item.rotation >= 0.1) {
-            wagTailSpeed = -0.02;
-          }
-          if (item.rotation <= -0.7) {
-            wagTailSpeed = 0.02;
-          }
+              //搖擺動作
+              function wagMonsterItem(item) {
+                if (item.rotation >= 0.1) {
+                  wagSpeed = -setWagSpeed;
+                }
+                if (item.rotation <= -0.1) {
+                  wagSpeed = setWagSpeed;
+                }
+                item.rotation += wagSpeed;
+              }
 
-          item.rotation += wagTailSpeed;
+              //比較強烈的搖尾巴
+              let wagTailSpeed = 0.02;
+              function wagMoreTail(item) {
+                if (item.rotation >= 0.1) {
+                  wagTailSpeed = -0.02;
+                }
+                if (item.rotation <= -0.7) {
+                  wagTailSpeed = 0.02;
+                }
 
-          setTimeout(() => {
-            clearInterval(waggingTail);
-          }, 1000);
-        }
+                item.rotation += wagTailSpeed;
 
-        //放到ticker比較難控制暫停，放這邊可以用clearInterval控制
-        let controlTimer = "";
-        function controlMove() {
-          controlTimer = setInterval(() => {
-            allMonsterBobbing(container);
-          }, 15);
-          //15ms是測起來比較正常的速度
-        }
-        controlMove();
+                setTimeout(() => {
+                  clearInterval(waggingTail);
+                }, 1000);
+              }
 
-        //幀率(每秒螢幕刷新最大次數)更新函式
-        app.ticker.add(() => {
-          backGroundImg.x += 0.1;
-          wagMonsterItem(head);
-          wagMonsterItem(lHand);
-          wagMonsterItem(rHand);
-          wagMonsterItem(lFoot);
-          wagMonsterItem(rFoot);
-          wagMonsterItem(tail);
-        });
+              //放到ticker比較難控制暫停，放這邊可以用clearInterval控制
+              let controlTimer = "";
+              function controlMove() {
+                controlTimer = setInterval(() => {}, 15);
+                //15ms是測起來比較正常的速度
+              }
+              controlMove();
 
-        //互動動作------------------------
-        //  設定可互動
-        container.interactive = true;
+              //幀率(每秒螢幕刷新最大次數)更新函式
+              app.ticker.add(() => {
+                backGroundImg.x += 0.1;
+                allMonsterBobbing(container);
+                wagMonsterItem(head);
+                wagMonsterItem(lHand);
+                wagMonsterItem(rHand);
+                wagMonsterItem(lFoot);
+                wagMonsterItem(rFoot);
+                wagMonsterItem(tail);
+              });
 
-        //滑鼠變手型
-        container.buttonMode = true;
+              //互動動作------------------------
+              //  設定可互動
+              container.interactive = true;
 
-        let waggingTail = "";
-        container.on("pointerdown", (event) => {
-          clearInterval(waggingTail);
-          waggingTail = setInterval(() => wagMoreTail(tail));
-        });
+              //滑鼠變手型
+              container.buttonMode = true;
 
-        //互動按鈕----------------------------
+              let waggingTail = "";
+              container.on("pointerdown", (event) => {
+                clearInterval(waggingTail);
+                waggingTail = setInterval(() => wagMoreTail(tail));
+              });
 
-        sayHi.onclick = function () {
-          rHand.rotation = 0.7;
-        };
+              //互動按鈕----------------------------
 
-        adjustSize.oninput = function () {
-          container.scale.set(adjustSize.value);
-        };
+              sayHi.onclick = function () {
+                rHand.rotation = 0.7;
+              };
 
-        jump.onclick = justJump;
-        function justJump() {}
-      }
+              adjustSize.oninput = function () {
+                container.scale.set(adjustSize.value);
+              };
 
-      //暫放..
+              jump.onclick = justJump;
+              function justJump() {}
+            }
 
-      //感覺把TDM放div，玩dimoGame時控div會比較好控制
-      //jump ver1 卡卡的
-      // rHand.rotation = 0.7;
-      //     lHand.rotation = -0.9;
-      //     setTimeout(() => {
-      //       container.y -= 20;
-      //     }, 100);
-      //     setTimeout(() => {
-      //       container.y -= 25;
-      //     }, 200);
-      //     setTimeout(() => {
-      //       container.y += 25;
-      //     }, 300);
-      //     setTimeout(() => {
-      //       container.y += 20;
-      //     }, 400);
-      //     setTimeout(() => {
-      //       container.y -= 15;
-      //     }, 500);
-      //     setTimeout(() => {
-      //       container.y += 15;
-      //     }, 600);
-      //     setTimeout(() => {
-      //       container.y -= 10;
-      //     }, 700);
-      //     setTimeout(() => {
-      //       container.y += 10;
-      //     }, 800);
-      // setTimeout(() => {
-      //   container.y -= 5;
-      // }, 900);
-      // setTimeout(() => {
-      //   container.y += 5;
-      // }, 1000);
+            //----------------------------
+            //暫放..
+            //感覺把TDM放div，玩dimoGame時控div會比較好控制
+            //jump ver1 卡卡的
+            // rHand.rotation = 0.7;
+            //     lHand.rotation = -0.9;
+            //     setTimeout(() => {
+            //       container.y -= 20;
+            //     }, 100);
+            //     setTimeout(() => {
+            //       container.y -= 25;
+            //     }, 200);
+            //     setTimeout(() => {
+            //       container.y += 25;
+            //     }, 300);
+            //     setTimeout(() => {
+            //       container.y += 20;
+            //     }, 400);
+            //     setTimeout(() => {
+            //       container.y -= 15;
+            //     }, 500);
+            //     setTimeout(() => {
+            //       container.y += 15;
+            //     }, 600);
+            //     setTimeout(() => {
+            //       container.y -= 10;
+            //     }, 700);
+            //     setTimeout(() => {
+            //       container.y += 10;
+            //     }, 800);
+            // setTimeout(() => {
+            //   container.y -= 5;
+            // }, 900);
+            // setTimeout(() => {
+            //   container.y += 5;
+            // }, 1000);
 
-      //jump ver2 連按會失控
-      //clearInterval(controlTimer);
+            //jump ver2 連按會失控
+            //clearInterval(controlTimer);
 
-      // let jumpTimer = setInterval(() => (container.y -= 1));
-      // setTimeout(() => {
+            // let jumpTimer = setInterval(() => (container.y -= 1));
+            // setTimeout(() => {
 
-      //   clearInterval(jumpTimer);
-      //   let downTimer = setInterval(() => (container.y += 1));
+            //   clearInterval(jumpTimer);
+            //   let downTimer = setInterval(() => (container.y += 1));
 
-      //   setTimeout(() => {
-      //     clearInterval(downTimer);
-      //   }, 500);
+            //   setTimeout(() => {
+            //     clearInterval(downTimer);
+            //   }, 500);
 
-      //   main()
-      // }, 500);
+            //   main()
+            // }, 500);
     </script>
   </body>
 </html>
