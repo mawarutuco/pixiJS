@@ -9,10 +9,10 @@ function TDM(monsterBoxID, ToDoMonImg) {
     .add("tail", ToDoMonImg.tail)
     .add("rFoot", ToDoMonImg.rFoot)
     .add("lFoot", ToDoMonImg.lFoot)
-    .add("rHand", "toDoMonImg/todoMon_demo_rHand04.png")
-    .add("body", "toDoMonImg/todoMon_demo_body05.png")
-    .add("lHand", "toDoMonImg/todoMon_demo_lHand06.png")
-    .add("head", "toDoMonImg/todoMon_demo_face07.png")
+    .add("rHand",ToDoMonImg.rHand )
+    .add("body",ToDoMonImg.body )
+    .add("lHand",ToDoMonImg.lHand )
+    .add("head",ToDoMonImg.head )
     .load(init);
 
   //載入好後執行
@@ -39,7 +39,7 @@ function TDM(monsterBoxID, ToDoMonImg) {
     const container = new PIXI.Container();
 
     //畫布丟進網頁
-    if (monsterBoxID)
+    if (monsterBoxID!==null)
       document.getElementById(monsterBoxID).appendChild(app.view);
     else document.body.appendChild(app.view);
 

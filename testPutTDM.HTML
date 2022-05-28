@@ -8,30 +8,48 @@
   </head>
 
   <style>
-    #test {
+    #TDMBox {
       position: absolute;
       bottom: 0;
       border: 5px solid;
     }
+    canvas {
+      /* transform: scale(-1, 1); */
+    }
   </style>
 
   <body>
-    <div id="test"></div>
+
+    <!-- TDM放這裡面 -->
+    <div id="TDMBox"></div>
+
+    <!-- 引入pixi.js 6版 -->
     <script src="./js/pixi.js"></script>
+
     <script type="module">
 
-
+      // TMD obj
       let ToDoMonImg = {
         background:
           "https://res.cloudinary.com/luvikung/image/upload/v1607422343/vonder/grass1_bvr0if.png",
         tail: "toDoMonImg/todoMon_demo01.png",
-        rFoot:"toDoMonImg/todoMon_demo_rFoot02.png",
-        lFoot:"toDoMonImg/todoMon_demo_lFoot03.png",
+        rFoot: "toDoMonImg/todoMon_demo_rFoot02.png",
+        lFoot: "toDoMonImg/todoMon_demo_lFoot03.png",
+        rHand: "toDoMonImg/todoMon_demo_rHand04.png",
+        body: "toDoMonImg/todoMon_demo_body05.png",
+        lHand: "toDoMonImg/todoMon_demo_lHand06.png",
+        head: "toDoMonImg/todoMon_demo_face07.png",
       };
 
+      //要改變TDM衣服
+      // ToDoMonImg.tail="img/scareCat.png"
+
+      //引入ToDoMon.js
       import { TDM } from "./ToDoMon.js";
 
-      TDM("test", ToDoMonImg);
+      //參數1放TDM要放的位置(若抓不到東西就直接把TDM丟到畫面上)
+      //參數2放TMD obj
+      TDM("TDMBox", ToDoMonImg);
     </script>
   </body>
 </html>
