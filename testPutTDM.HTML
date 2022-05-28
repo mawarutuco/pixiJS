@@ -13,15 +13,25 @@
       bottom: 0;
       border: 5px solid;
     }
-
   </style>
 
   <body>
     <div id="test"></div>
     <script src="./js/pixi.js"></script>
     <script type="module">
+
+
+      let ToDoMonImg = {
+        background:
+          "https://res.cloudinary.com/luvikung/image/upload/v1607422343/vonder/grass1_bvr0if.png",
+        tail: "toDoMonImg/todoMon_demo01.png",
+        rFoot:"toDoMonImg/todoMon_demo_rFoot02.png",
+        lFoot:"toDoMonImg/todoMon_demo_lFoot03.png",
+      };
+
       import { TDM } from "./ToDoMon.js";
-      TDM("test");
+
+      TDM("test", ToDoMonImg);
     </script>
   </body>
 </html>

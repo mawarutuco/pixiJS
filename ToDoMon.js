@@ -1,19 +1,14 @@
 // import * as PIXI from './js/pixi.js';
 export { TDM };
 
-function TDM(monsterBoxID) {
-
+function TDM(monsterBoxID, ToDoMonImg) {
   //載入圖片
   let loader = new PIXI.Loader();
-  
   loader
-    .add(
-      "backGroundImg",
-      "https://res.cloudinary.com/luvikung/image/upload/v1607422343/vonder/grass1_bvr0if.png"
-    )
-    .add("tail", "toDoMonImg/todoMon_demo01.png")
-    .add("rFoot", "toDoMonImg/todoMon_demo_rFoot02.png")
-    .add("lFoot", "toDoMonImg/todoMon_demo_lFoot03.png")
+    .add("backGroundImg", ToDoMonImg.background)
+    .add("tail", ToDoMonImg.tail)
+    .add("rFoot", ToDoMonImg.rFoot)
+    .add("lFoot", ToDoMonImg.lFoot)
     .add("rHand", "toDoMonImg/todoMon_demo_rHand04.png")
     .add("body", "toDoMonImg/todoMon_demo_body05.png")
     .add("lHand", "toDoMonImg/todoMon_demo_lHand06.png")
@@ -180,4 +175,3 @@ function TDM(monsterBoxID) {
     //   };
   }
 }
-
